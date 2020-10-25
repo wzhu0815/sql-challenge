@@ -42,6 +42,8 @@ create table titles
 title varchar);
 select * from  titles;
 
+engine = create_engine(f'postgresql://{user}:{pw}@localhost:5432/homework-test')
+connection = engine.connect()
 
-
+df = pd.read_sql_query('select ts.title,round(avg(s.salary),2) as Avg_Salary from salaries as s left join employees as es on es.emp_no=s.emp_no left join titles as ts on ts.title_id = es.emp_title_id group by ts.title;',connection)
 
