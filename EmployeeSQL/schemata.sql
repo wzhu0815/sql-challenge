@@ -1,49 +1,69 @@
-drop table departments;
-create table departments (
-dept_no varchar primary key,
-	dept_name varchar);
+
+CREATE TABLE "departments" (
+    "dept_no" varchar   NOT NULL,
+    "dept_name" varchar   NOT NULL,
+    CONSTRAINT "pk_departments" PRIMARY KEY (
+        "dept_no"
+     )
+);
+
+CREATE TABLE "dept_emp" (
+    "emp_no" int   NOT NULL,
+    "dept_no" varchar   NOT NULL
+);
+
+CREATE TABLE "dept_manager" (
+    "dept_no" varchar   NOT NULL,
+    "emp_no" int   NOT NULL
+);
+
+CREATE TABLE "employees" (
+    "emp_no" int   NOT NULL,
+    "emp_title_id" varchar   NOT NULL,
+    "birth_date" date   NOT NULL,
+    "first_name" varchar   NOT NULL,
+    "last_name" varchar   NOT NULL,
+    "sex" varchar   NOT NULL,
+    "hire_date" date   NOT NULL,
+    CONSTRAINT "pk_employees" PRIMARY KEY (
+        "emp_no"
+     )
+);
+
+CREATE TABLE "salaries" (
+    "emp_no" int   NOT NULL,
+    "salary" int   NOT NULL
+);
+
+CREATE TABLE "titles" (
+    "title_id" varchar   NOT NULL,
+    "title" varchar   NOT NULL,
+    CONSTRAINT "pk_titles" PRIMARY KEY (
+        "title_id"
+     )
+);
+
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
+
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
+
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_emp_title_id" FOREIGN KEY("emp_title_id")
+REFERENCES "titles" ("title_id");
+
+ALTER TABLE "salaries" ADD CONSTRAINT "fk_salaries_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
 select * from departments;
-
-
-drop table dept_emp;
-create table dept_emp (
-emp_no int,
-	dept_no varchar);
-select * from  dept_emp;
-
-drop table dept_manager;
-create table dept_manager (
-	dept_no varchar,
-emp_no int primary key);
-select * from  dept_manager;
-
-drop table employees;
-create table employees (
-emp_no int primary key,
-emp_title_id varchar,
-	birth_date date,
-	first_name varchar,
-	last_name varchar,
-	sex varchar,	
-	hire_date date);
-	
-select * from  employees;
-
-drop table salaries;
-create table salaries
-(emp_no int primary key,
-salary int);
-
-select * from  salaries;
-
-drop table titles;
-create table titles
-(title_id varchar primary key,
-title varchar);
-select * from  titles;
-
-engine = create_engine(f'postgresql://{user}:{pw}@localhost:5432/homework-test')
-connection = engine.connect()
-
-df = pd.read_sql_query('select ts.title,round(avg(s.salary),2) as Avg_Salary from salaries as s left join employees as es on es.emp_no=s.emp_no left join titles as ts on ts.title_id = es.emp_title_id group by ts.title;',connection)
-
+select * from dept_emp;
+select * from dept_manager;
+select * from employees;
+select * from salaries;
+select * from titles;
